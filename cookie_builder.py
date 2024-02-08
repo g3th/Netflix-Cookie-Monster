@@ -172,7 +172,7 @@ def cookie_objects(expiration, secure_netflix_id, netflix_id, pas, opt_anon, flw
 class construct_cookie:
 
     def __init__(self, file):
-        self.filename = file
+        self.filename = "cookies/" + file
         self.netID = ""
         self.secure = ""
         self.opt = ""
@@ -205,6 +205,6 @@ class construct_cookie:
     def save_cookie(self, expiration, onetrust):
         netflix_cookie = cookie_objects(expiration, self.secure, self.netID, self.pas, self.opt, self.flwssn,
                                         self.nfvdid, onetrust)
-        with open("netflix.json", 'w') as write_cookie:
+        with open("cookies/netflix.json", 'w') as write_cookie:
             json.dump(netflix_cookie, write_cookie, indent=3)
         write_cookie.close()
