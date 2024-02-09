@@ -9,5 +9,7 @@ Choose an option in the program in order to:
 
 2) Login with existing credentials, and export a login cookie for future usage. A usage which is undoubtedly suspect, but that's not for me to judge.
 
+3) Check multiple cookie files, created in Netscape format, and ending in "*.txt". Place the files in the "cookies/" folder, and if valid files exist they will be stored in "valid cookies".
+
 
 Launch preferably in a Linux terminal, although the script was created in Windows and should work fine (apart from botched escape sequences in powershell...).
