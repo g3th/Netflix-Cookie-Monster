@@ -1,9 +1,8 @@
 from options import browser_init
-from header import header
-from gui import user_interface
+from gui import user_interface, sub_menu
 
 if __name__ == "__main__":
-    header()
+
     while True:
         interface = user_interface()
         if interface == "q":
@@ -15,8 +14,10 @@ if __name__ == "__main__":
                 case "1":
                     filename = input("Enter file name (i.e. file.txt):")
                     options.launch()
-                    options.option_one(filename)
+                    options.option_one(filename, 1)
                 case "2":
                     options.option_two()
+                case "3":
+                    options.option_three()
                 case _:
                     options.invalid()

@@ -9,7 +9,7 @@ import json
 # "httpOnly" and "hostOnly" - both should have first letter capitalized
 # "secure" is capitalized
 
-def cookie_objects(expiration, secure_netflix_id, netflix_id, pas, opt_anon, flwssn, nfvdid, onetrust):
+def cookie_objects(expiration, secure_netflix_id, netflix_id, pas, opt_anon, flwssn, nfvdid):
     cookie_data = {
         "domain": ".netflix.com",
         "expirationDate": expiration,
@@ -180,7 +180,7 @@ class construct_cookie:
         self.flwssn = ""
         self.pas = ""
 
-    def assign_values(self):
+    def assign_values(self, counter):
         with open(self.filename, 'r') as cookie_file:
             for line in cookie_file.readlines():
                 if line.split("\t")[5] == "NetflixId":
@@ -195,6 +195,7 @@ class construct_cookie:
                     self.flwssn = line.split("\t")[6].strip()
                 if "pas" in line:
                     self.pas = line.split("\t")[6].strip()
+        cookie_file.close()
 
     def acquire_cookie(self, browser):
         with open(self.filename, 'w') as cookie:
@@ -202,9 +203,10 @@ class construct_cookie:
         cookie.close()
 
     # expiration, Secure_netflix_id, netflix_id, pas, opt_anon, flwssn, nfvdid, onetrust
-    def save_cookie(self, expiration, onetrust):
+    def save_cookie(self, expiration):
         netflix_cookie = cookie_objects(expiration, self.secure, self.netID, self.pas, self.opt, self.flwssn,
-                                        self.nfvdid, onetrust)
+                                        self.nfvdid)
         with open("cookies/netflix.json", 'w') as write_cookie:
             json.dump(netflix_cookie, write_cookie, indent=3)
         write_cookie.close()
+        return netflix_cookie
