@@ -36,7 +36,7 @@ class browser_init:
     def option_one(self, filename, counter):
         cookie = construct_cookie(filename)
         cookie.assign_values(counter)
-        netflix_cookie = cookie.save_cookie(self.expiry)
+        netflix_c = cookie.save_cookie(self.expiry)
         try:
             with open("cookies/netflix.json", 'r') as netflix_cookie:
                 cookie = json.load(netflix_cookie)
@@ -50,7 +50,7 @@ class browser_init:
                     self.browser.find_elements(By.XPATH,
                                                "//div[@class='ptrack-container billboard-presentation-tracking']")):
                 with open("valid_cookies/" + str(filename), 'w') as write_cookie:
-                    json.dump(netflix_cookie, write_cookie, indent=3)
+                    json.dump(netflix_c, write_cookie, indent=3)
                 write_cookie.close()
                 print("Login was valid.")
                 input("Press Enter to return to Menu (i.e. after browsing, device registration etc..)")
