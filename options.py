@@ -17,6 +17,8 @@ class browser_init:
     def __init__(self):
         time_now = str(datetime.now())
         posix_day = 86400
+        self.parse_file = parse_file()
+        self.valid_directory = "valid_cookies/"
         self.cookie_directory_files = os.listdir("cookies/")
         self.expiry = time.time() + posix_day * 365
         self.time_parsed_onetrust = time_now.split(" ")[0] + "T" + time_now.split(" ")[1][0:-3] + "Z"
@@ -33,9 +35,10 @@ class browser_init:
         self.browser.set_window_size(300, 600)
         time.sleep(0.7)
 
-    def option_one(self, filename, counter):
-        cookie = construct_cookie(filename)
-        cookie.assign_values(counter)
+    def option_one(self, filename):
+        file_lines = self.parse_file.extract_cookie_information(filename)
+        cookie = construct_cookie()
+        cookie.assign_values(file_lines)
         netflix_c = cookie.save_cookie(self.expiry)
         try:
             with open("cookies/netflix.json", 'r') as netflix_cookie:
@@ -49,7 +52,7 @@ class browser_init:
             if (self.browser.find_elements(By.XPATH, '//div[@class="profiles-gate-container"]') or
                     self.browser.find_elements(By.XPATH,
                                                "//div[@class='ptrack-container billboard-presentation-tracking']")):
-                with open("valid_cookies/" + str(filename), 'w') as write_cookie:
+                with open("valid_cookies/" + str(filename.replace(".txt", ".json")), 'w') as write_cookie:
                     json.dump(netflix_c, write_cookie, indent=3)
                 write_cookie.close()
                 print("Login was valid.")
@@ -64,20 +67,39 @@ class browser_init:
             print("\x1bc")
 
     def option_two(self):
+        cookie_filenames = self.parse_file.get_text_files()
+        counter = 0
+        while counter < len(cookie_filenames):
+            sub_menu(cookie_filenames[counter], counter, len(cookie_filenames))
+            browser_init.launch(self)
+            browser_init.option_one(self, cookie_filenames[counter])
+            counter += 1
+
+    def option_three(self):
         print("TODO")
         input("Press enter...")
         print("\x1bc")
 
-    def option_three(self):
-        parser = parse_file()
-        cookie_filenames = parser.get_text_files()
-        counter = 0
-        while counter < len(cookie_filenames):
-            sub_menu(counter, len(cookie_filenames), cookie_filenames[counter])
-            browser_init.launch(self)
-            browser_init.option_one(self, cookie_filenames[counter], counter)
-            counter += 1
+    def option_four(self, filename):
+        browser_init.launch(self)
+        with open(self.valid_directory + str(filename), 'r') as read_cookie:
+            cookie_jar = json.load(read_cookie)
+            for cookie in cookie_jar:
+                self.browser.add_cookie(cookie)
+            time.sleep(0.7)
+        read_cookie.close()
+        self.browser.refresh()
+        time.sleep(0.8)
+        if (self.browser.find_elements(By.XPATH, '//div[@class="profiles-gate-container"]') or
+                self.browser.find_elements(By.XPATH,
+                                           "//div[@class='ptrack-container billboard-presentation-tracking']")):
+            print("Login was valid.")
+            input("Press Enter to return to Menu (i.e. after browsing, device registration etc..)")
+        else:
+            print("Login was invalid.")
 
+    def help(self):
+        print("Help")
 
     def invalid(self):
         print("Invalid Input.")

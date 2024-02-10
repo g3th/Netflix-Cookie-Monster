@@ -171,8 +171,8 @@ def cookie_objects(expiration, secure_netflix_id, netflix_id, pas, opt_anon, flw
 
 class construct_cookie:
 
-    def __init__(self, file):
-        self.filename = "cookies/" + file
+    def __init__(self):
+        self.filename = ""
         self.netID = ""
         self.secure = ""
         self.opt = ""
@@ -180,22 +180,20 @@ class construct_cookie:
         self.flwssn = ""
         self.pas = ""
 
-    def assign_values(self, counter):
-        with open(self.filename, 'r') as cookie_file:
-            for line in cookie_file.readlines():
-                if line.split("\t")[5] == "NetflixId":
-                    self.netID = line.split("\t")[6].strip()
-                if "OptanonConsent" in line:
-                    self.opt = line.split("\t")[6].strip()
-                if "SecureNetflixId" in line:
-                    self.secure = line.split("\t")[6].strip()
-                if "nfvdid" in line:
-                    self.nfvdid = line.split("\t")[6].strip()
-                if "flwssn" in line:
-                    self.flwssn = line.split("\t")[6].strip()
-                if "pas" in line:
-                    self.pas = line.split("\t")[6].strip()
-        cookie_file.close()
+    def assign_values(self, file_lines):
+        for line in file_lines:
+            if line.split("\t")[5] == "NetflixId":
+                self.netID = line.split("\t")[6].strip()
+            if "OptanonConsent" in line:
+                self.opt = line.split("\t")[6].strip()
+            if "SecureNetflixId" in line:
+                self.secure = line.split("\t")[6].strip()
+            if "nfvdid" in line:
+                self.nfvdid = line.split("\t")[6].strip()
+            if "flwssn" in line:
+                self.flwssn = line.split("\t")[6].strip()
+            if "pas" in line:
+                self.pas = line.split("\t")[6].strip()
 
     def acquire_cookie(self, browser):
         with open(self.filename, 'w') as cookie:

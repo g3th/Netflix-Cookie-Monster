@@ -1,8 +1,7 @@
 from options import browser_init
-from gui import user_interface, sub_menu
+from gui import user_interface
 
 if __name__ == "__main__":
-
     while True:
         interface = user_interface()
         if interface == "q":
@@ -14,10 +13,13 @@ if __name__ == "__main__":
                 case "1":
                     filename = input("Enter file name (i.e. file.txt):")
                     options.launch()
-                    options.option_one(filename, 1)
+                    options.option_one(filename)
                 case "2":
                     options.option_two()
                 case "3":
                     options.option_three()
+                case "4":
+                    filename = input("Enter file name (i.e. file.json):")
+                    options.option_four(filename)
                 case _:
                     options.invalid()
