@@ -70,7 +70,7 @@ class browser_init:
                                                    "//div[@class='ptrack-container billboard-presentation-tracking']")):
                     print("\033[38;5;10m    ✔ \033[38;5;33m|")
                 else:
-                    print("\033[38;5;9m    X  \033[38;5;33m|")
+                    print("\033[38;5;9m    X \033[38;5;33m|")
                 print("\033[38;5;33m+---------------------------------------------------------------------------------------+")
             self.browser.close()
         except FileNotFoundError:
@@ -91,7 +91,7 @@ class browser_init:
             browser_init.option_one(self, cookie_filenames[counter])
             counter += 1
         self.multi_checker_is_running = False
-        input("Done. Press Enter to return to Menu")
+        input("\n\033[38;5;11mDone. Press Enter to return to Menu")
 
     def option_three(self):
         print("TODO")
