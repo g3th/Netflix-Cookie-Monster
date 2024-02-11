@@ -13,7 +13,7 @@ if __name__ == "__main__":
                 case "1":
                     filename = input("Enter file name (i.e. file.txt):")
                     options.launch()
-                    options.option_one(filename)
+                    options.option_one(filename, 0)
                 case "2":
                     options.option_two()
                 case "3":

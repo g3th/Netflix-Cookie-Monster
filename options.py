@@ -37,7 +37,7 @@ class browser_init:
         self.browser.set_window_size(300, 600)
         time.sleep(0.7)
 
-    def option_one(self, filename):
+    def option_one(self, filename, counter):
         file_lines = self.parse_file.extract_cookie_information(filename)
         cookie = construct_cookie()
         cookie.assign_values(file_lines)
@@ -68,9 +68,19 @@ class browser_init:
                 if (self.browser.find_elements(By.XPATH, '//div[@class="profiles-gate-container"]') or
                         self.browser.find_elements(By.XPATH,
                                                    "//div[@class='ptrack-container billboard-presentation-tracking']")):
-                    print("\033[38;5;10m    ✔ \033[38;5;33m|")
+                    with open("valid_cookies/" + str(filename.replace(".txt", ".json")), 'w') as write_cookie:
+                        json.dump(netflix_c, write_cookie, indent=3)
+                    write_cookie.close()
+                    if counter < 9:
+                        print("\033[38;5;10m    ✔ \033[38;5;33m|")
+                    elif counter == 9 or counter > 9:
+                        print("\033[38;5;10m   ✔ \033[38;5;33m|")
+
                 else:
-                    print("\033[38;5;9m    X \033[38;5;33m|")
+                    if counter < 9:
+                        print("\033[38;5;9m    X \033[38;5;33m|")
+                    elif counter == 9 or counter > 9:
+                        print("\033[38;5;9m   X \033[38;5;33m|")
                 print("\033[38;5;33m+---------------------------------------------------------------------------------------+")
             self.browser.close()
         except FileNotFoundError:
@@ -88,7 +98,7 @@ class browser_init:
         while counter < len(cookie_filenames):
             sub_menu(cookie_filenames[counter], counter, len(cookie_filenames))
             browser_init.launch(self)
-            browser_init.option_one(self, cookie_filenames[counter])
+            browser_init.option_one(self, cookie_filenames[counter], counter)
             counter += 1
         self.multi_checker_is_running = False
         input("\n\033[38;5;11mDone. Press Enter to return to Menu")
