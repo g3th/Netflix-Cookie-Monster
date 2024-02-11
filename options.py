@@ -2,9 +2,10 @@ import json
 import time
 import os
 
-import gui
 from gui import sub_menu
+from gui import multi_cookie_checker_info
 from cookie_builder import construct_cookie
+from header import header
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -19,6 +20,7 @@ class browser_init:
         posix_day = 86400
         self.parse_file = parse_file()
         self.valid_directory = "valid_cookies/"
+        self.multi_checker_is_running = False
         self.cookie_directory_files = os.listdir("cookies/")
         self.expiry = time.time() + posix_day * 365
         self.time_parsed_onetrust = time_now.split(" ")[0] + "T" + time_now.split(" ")[1][0:-3] + "Z"
@@ -49,17 +51,27 @@ class browser_init:
             time.sleep(1)
             self.browser.refresh()
             time.sleep(1)
-            if (self.browser.find_elements(By.XPATH, '//div[@class="profiles-gate-container"]') or
-                    self.browser.find_elements(By.XPATH,
-                                               "//div[@class='ptrack-container billboard-presentation-tracking']")):
-                with open("valid_cookies/" + str(filename.replace(".txt", ".json")), 'w') as write_cookie:
-                    json.dump(netflix_c, write_cookie, indent=3)
-                write_cookie.close()
-                print("Login was valid.")
-                input("Press Enter to return to Menu (i.e. after browsing, device registration etc..)")
-            else:
-                print("Login was invalid.")
-            print("Done.")
+            if not self.multi_checker_is_running:
+                if (self.browser.find_elements(By.XPATH, '//div[@class="profiles-gate-container"]') or
+                        self.browser.find_elements(By.XPATH,
+                                                   "//div[@class='ptrack-container billboard-presentation-tracking']")):
+
+                    print("Login was valid.")
+                    input("Press Enter to return to Menu (i.e. after browsing, device registration etc..)")
+                    with open("valid_cookies/" + str(filename.replace(".txt", ".json")), 'w') as write_cookie:
+                        json.dump(netflix_c, write_cookie, indent=3)
+                    write_cookie.close()
+                else:
+                    print("Login was invalid.")
+                    input("Press Enter to return to Menu")
+            elif self.multi_checker_is_running:
+                if (self.browser.find_elements(By.XPATH, '//div[@class="profiles-gate-container"]') or
+                        self.browser.find_elements(By.XPATH,
+                                                   "//div[@class='ptrack-container billboard-presentation-tracking']")):
+                    print("\033[38;5;10m    ✔ \033[38;5;33m|")
+                else:
+                    print("\033[38;5;9m    X  \033[38;5;33m|")
+                print("\033[38;5;33m+---------------------------------------------------------------------------------------+")
             self.browser.close()
         except FileNotFoundError:
             print("File Not Found. Double Check and try again.")
@@ -67,13 +79,19 @@ class browser_init:
             print("\x1bc")
 
     def option_two(self):
+        self.multi_checker_is_running = True
         cookie_filenames = self.parse_file.get_text_files()
         counter = 0
+        print("\x1bc")
+        header()
+        multi_cookie_checker_info()
         while counter < len(cookie_filenames):
             sub_menu(cookie_filenames[counter], counter, len(cookie_filenames))
             browser_init.launch(self)
             browser_init.option_one(self, cookie_filenames[counter])
             counter += 1
+        self.multi_checker_is_running = False
+        input("Done. Press Enter to return to Menu")
 
     def option_three(self):
         print("TODO")
